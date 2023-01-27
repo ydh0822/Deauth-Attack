@@ -8,8 +8,8 @@ You must run with sudo privileges to obtain iwconfig privileges.
 
 Deauth-Attack 3ways
  - AP broadcast frame
-    - ./Deauth-Attack interface ap_mac
+    - ./Deauth-Attack -i interface -a ap_mac
  - AP unicast, Station unicast frame
-    - ./Deauth-Attack interface ap_mac station_mac
+    - ./Deauth-Attack -i interface -a ap_mac -s station_mac
  - authentication frame
-    - ./Deauth-Attack interface ap_mac station_mac -c
+    - ./Deauth-Attack -i interface -a ap_mac -s station_mac -c
