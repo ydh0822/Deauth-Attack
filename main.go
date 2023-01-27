@@ -189,13 +189,13 @@ func AP_unicast(User_interface string, Ap_mac string, Station_mac string) {
 				fmt.Println("Channel Hopping : ", tmp_ch)
 				for i := 0; i < 20; i++ {
 					handle.WritePacketData(Deauth_packet)
-					fmt.Println("[*] Deauth Attack (AP Broadcast) AP : ", Ap_mac, "interface : ", User_interface, "Channel : ", tmp_ch)
+					fmt.Println("[*] Deauth Attack (AP unicast) AP : ", Ap_mac, "Station : ", Station_mac, "interface : ", User_interface, "Channel : ", tmp_ch)
 					time.Sleep(time.Millisecond * 50)
 				}
 			}
 		} else {
 			handle.WritePacketData(Deauth_packet)
-			fmt.Println("[*] Deauth Attack (AP Broadcast) AP : ", Ap_mac, "interface : ", User_interface, "Channel : ", CH)
+			fmt.Println("[*] Deauth Attack (AP unicast) AP : ", Ap_mac, "Station : ", Station_mac, "interface : ", User_interface, "Channel : ", CH)
 			time.Sleep(time.Millisecond * 50)
 		}
 	}
