@@ -80,11 +80,14 @@ func _Init_(User_interface string) int {
 	tmp_CH := ""
 	fmt.Printf("input Your AP Channel (defualt == 0): ")
 	fmt.Scanln(&tmp_CH)
-	ExcuteCMD("sudo", "iwconfig", User_interface, "channel", tmp_CH)
+	if tmp_CH != "0" {
+		ExcuteCMD("sudo", "iwconfig", User_interface, "channel", tmp_CH)
+	}
 	CH, err := strconv.Atoi(tmp_CH)
 	if err != nil {
 		fmt.Println(err)
 	}
+
 	return CH
 }
 
