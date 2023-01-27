@@ -35,11 +35,11 @@ func (arr *StringArray) Set(s string) error {
 
 func Usage() {
 	fmt.Println(" - AP broadcast frame")
-	fmt.Println(" 	- ./Deauth-Attack <interface> <ap mac>")
+	fmt.Println(" 	- ./Deauth-Attack -i <interface> -a <ap mac>")
 	fmt.Println(" - AP unicast, Station unicast frame")
-	fmt.Println(" 	- ./Deauth-Attack <interface> <ap mac> <station mac>")
+	fmt.Println(" 	- ./Deauth-Attack -i <interface> -a <ap mac> -s <station mac>")
 	fmt.Println(" - authentication frame")
-	fmt.Println(" 	- ./Deauth-Attack <interface> <ap mac> <station mac> -c")
+	fmt.Println(" 	- ./Deauth-Attack -i <interface> -a <ap mac> -s <station mac> -c")
 	os.Exit(-1)
 }
 
@@ -64,7 +64,24 @@ func Turnonmon(name string) {
 	fmt.Println(name + " is up \n")
 }
 
+func AP_broadcast(User_interface string, Ap_mac string) {
+	fmt.Println("AP_broadcast")
+}
+
+func AP_unicast(User_interface string, Ap_mac string, Station_mac string) {
+	fmt.Println("AP_unicast")
+}
+
+func AP_unicast_authentication(User_interface string, Ap_mac string, Station_mac string) {
+	fmt.Println("AP_unicast_authentication")
+}
+
 func Deauth_Attack(User_interface string, Ap_mac string, Station_mac string, Auth_flag bool) {
-	fmt.Println("_start_")
-	println(User_interface, Ap_mac, Station_mac, Auth_flag)
+	if Auth_flag {
+		AP_unicast_authentication(User_interface, Ap_mac, Station_mac)
+	} else if Station_mac != "" {
+		AP_unicast(User_interface, Ap_mac, Station_mac)
+	} else {
+		AP_broadcast(User_interface, Ap_mac)
+	}
 }
