@@ -77,10 +77,10 @@ func AP_unicast_authentication(User_interface string, Ap_mac string, Station_mac
 }
 
 func Deauth_Attack(User_interface string, Ap_mac string, Station_mac string, Auth_flag bool) {
-	if Auth_flag {
-		AP_unicast_authentication(User_interface, Ap_mac, Station_mac)
-	} else if Station_mac != "" {
+	if Station_mac != "" {
 		AP_unicast(User_interface, Ap_mac, Station_mac)
+	} else if Auth_flag {
+		AP_unicast_authentication(User_interface, Ap_mac, Station_mac)
 	} else {
 		AP_broadcast(User_interface, Ap_mac)
 	}
