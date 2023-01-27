@@ -1,31 +1,36 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 func main() {
-	User_interface := os.Args[1]
-	Turnonmon(User_interface)
-	Ap_mac := os.Args[2]
-	if Ap_mac == "" {
+	User_interface := flag.String("i", "", "a string")
+	Ap_mac := flag.String("a", "", "a string")
+	Station_mac := flag.String("s", "", "a string")
+	Auth_flag := flag.Bool("c", false, "a bool")
+	flag.Parse()
+	if *User_interface == "" {
+		Usage()
+	} else if *Ap_mac == "" {
 		Usage()
 	}
-	Station_mac := ""
-	Auth_flag := ""
-	if os.Args[3] != "" {
-		Station_mac = os.Args[3]
-	}
-	if os.Args[4] != "" {
-		if os.Args[4] == "-c" {
-			Auth_flag = os.Args[4]
-		} else {
-			Usage()
-		}
-	}
-	Deauth_Attack(User_interface, Ap_mac, Station_mac, Auth_flag)
+	Deauth_Attack(*User_interface, *Ap_mac, *Station_mac, *Auth_flag)
+}
+
+type StringArray []string
+
+func (arr *StringArray) String() string {
+	return fmt.Sprintf("%v", *arr)
+}
+
+func (arr *StringArray) Set(s string) error {
+	*arr = strings.Split(s, ",")
+	return nil
 }
 
 func Usage() {
@@ -59,7 +64,7 @@ func Turnonmon(name string) {
 	fmt.Println(name + " is up \n")
 }
 
-func Deauth_Attack(User_interface string, Ap_mac string, Station_mac string, Auth_flag string) {
+func Deauth_Attack(User_interface string, Ap_mac string, Station_mac string, Auth_flag bool) {
 	fmt.Println("_start_")
 	println(User_interface, Ap_mac, Station_mac, Auth_flag)
 }
