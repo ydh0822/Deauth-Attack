@@ -89,7 +89,7 @@ func AP_broadcast(User_interface string, Ap_mac string) {
 	addr := strings.SplitN(Ap_mac, ":", 6)
 	var tmp_mac []uint8
 	for _, str := range addr {
-		tmp_uint64, err := strconv.ParseUint(str, 10, 64)
+		tmp_uint64, err := strconv.ParseUint(str, 16, 64)
 		if err != nil {
 			fmt.Println(err)
 		}
